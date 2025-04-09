@@ -69,6 +69,7 @@ class _ProfileViewState extends State<ProfileView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true, // Allow body to extend behind AppBar
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
@@ -80,7 +81,7 @@ class _ProfileViewState extends State<ProfileView> {
           'Profile',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        backgroundColor: primaryColor,
+        backgroundColor: Colors.transparent,
         elevation: 0,
       ),
       body:
@@ -88,15 +89,26 @@ class _ProfileViewState extends State<ProfileView> {
               ? Center(child: CircularProgressIndicator(color: secondaryColor))
               : Stack(
                 children: [
-                  // Yellow curved top background
+                  // Single background image for entire screen
                   Container(
-                    height: 100,
+                    height:
+                        MediaQuery.of(context).size.height *
+                        0.2, // Adjust height as needed
                     width: double.infinity,
-                    color: primaryColor,
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage('assets/images/banner2030.png'),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
+                  // Content starts here
                   SingleChildScrollView(
                     child: Column(
                       children: [
+                        SizedBox(
+                          height: AppBar().preferredSize.height + 20,
+                        ), // Add padding to account for AppBar
                         // Profile Header with card
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -207,17 +219,18 @@ class _ProfileViewState extends State<ProfileView> {
                         // General Section
                         _buildSectionTitle('General'),
                         _buildListTile(
-  icon: Icons.help_outline,
-  title: 'Support',
-  onTap: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const SupportChatbotScreen(),
-      ),
-    );
-  },
-),
+                          icon: Icons.help_outline,
+                          title: 'Support Chatbox',
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => const SupportChatbotScreen(),
+                              ),
+                            );
+                          },
+                        ),
                         _buildListTile(
                           icon: Icons.shield_outlined,
                           title: 'Terms of Service',
@@ -247,7 +260,7 @@ class _ProfileViewState extends State<ProfileView> {
                               if (mounted) {
                                 Navigator.of(
                                   context,
-                                ).pushReplacementNamed('/login');
+                                ).pushReplacementNamed('/login_page');
                               }
                             },
                             style: ElevatedButton.styleFrom(

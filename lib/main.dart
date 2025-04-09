@@ -7,13 +7,12 @@ import 'package:flutter_application_1/authentification/login_page.dart';
 import 'package:flutter_application_1/home_page.dart';
 import 'package:flutter_application_1/onboarding/onboarding_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await dotenv.load();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 
@@ -39,16 +38,11 @@ class MyApp extends StatelessWidget {
         inputDecorationTheme: InputDecorationTheme(
           contentPadding: const EdgeInsets.all(27),
           enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Colors.grey.shade300,
-              width: 3,
-            ),
+            borderSide: BorderSide(color: Colors.grey.shade300, width: 3),
             borderRadius: BorderRadius.circular(10),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(
-              width: 3,
-            ),
+            borderSide: const BorderSide(width: 3),
             borderRadius: BorderRadius.circular(10),
           ),
         ),
@@ -59,7 +53,7 @@ class MyApp extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
-          
+
           // If onboarding is completed, check authentication
           if (snapshot.data == true) {
             return StreamBuilder<User?>(
@@ -67,16 +61,14 @@ class MyApp extends StatelessWidget {
               builder: (context, authSnapshot) {
                 if (authSnapshot.connectionState == ConnectionState.waiting) {
                   return const Scaffold(
-                    body: Center(
-                      child: CircularProgressIndicator(),
-                    ),
+                    body: Center(child: CircularProgressIndicator()),
                   );
                 }
-                
+
                 if (authSnapshot.hasData && authSnapshot.data != null) {
                   return const MyHomePage();
                 }
-                
+
                 return const LoginPage();
               },
             );
@@ -88,7 +80,7 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
-  
+
   // Check if user has completed onboarding
   Future<bool> _checkOnboardingStatus() async {
     final prefs = await SharedPreferences.getInstance();

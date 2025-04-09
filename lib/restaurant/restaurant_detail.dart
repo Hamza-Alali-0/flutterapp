@@ -185,7 +185,8 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen>
                                 options: CarouselOptions(
                                   height: 240,
                                   viewportFraction: 1.0,
-                                  autoPlay: true,
+                                  autoPlay:
+                                      false, // Changed from true to false to stop auto-refresh
                                   autoPlayInterval: const Duration(seconds: 4),
                                   onPageChanged: (index, reason) {
                                     setState(() {
@@ -1042,8 +1043,6 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen>
                 return _buildGlovoMenuItem(item);
               },
             ),
-
-           
           ],
         );
       },
@@ -1192,37 +1191,6 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen>
                       style: TextStyle(color: textSecondaryColor, fontSize: 12),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 8),
-                    // Add button
-                    Container(
-                      height: 32,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: secondaryColor,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Center(
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: const [
-                            Icon(
-                              Icons.add_shopping_cart,
-                              color: Colors.white,
-                              size: 16,
-                            ),
-                            SizedBox(width: 6),
-                            Text(
-                              'Add',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 13,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
                     ),
                   ],
                 ),

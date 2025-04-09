@@ -893,8 +893,15 @@ class _CityDetailScreenState extends State<CityDetailScreen>
               ),
             ),
           ),
-          // REDUCED this spacing from 16 to 8 pixels
-          const SizedBox(height: 8),
+
+          // Improved separation between filters and content
+          const SizedBox(height: 16), // Increased from 8 to 16
+          // Divider for visual separation
+          Container(
+            margin: const EdgeInsets.only(bottom: 16),
+            height: 1,
+            color: Colors.grey[200],
+          ),
 
           // Show empty state or restaurant list
           _filteredRestaurants.isEmpty && !isLoading
@@ -988,199 +995,238 @@ class _CityDetailScreenState extends State<CityDetailScreen>
             ),
           );
         },
-        child: Container(
-          margin: const EdgeInsets.only(bottom: 10),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
+        child: Column(
+          children: [
+            Container(
+              margin: const EdgeInsets.only(
+                bottom: 8,
+              ), // Reduced bottom margin since we have a separator now
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(
+                  12,
+                ), // Slightly smaller radius
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 8, // Reduced from 10
+                    offset: const Offset(0, 3), // Reduced from 4
+                  ),
+                ],
               ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Restaurant image slider
-              Stack(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ClipRRect(
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(16),
-                    ),
-                    child:
-                        restaurant.imageUrls.isNotEmpty
-                            ? SizedBox(
-                              height: 140,
-                              child: PageView.builder(
-                                itemCount: restaurant.imageUrls.length,
-                                itemBuilder: (context, index) {
-                                  return _buildRestaurantImageItem(
-                                    restaurant.imageUrls[index],
-                                  );
-                                },
+                  // Restaurant image slider
+                  Stack(
+                    children: [
+                      ClipRRect(
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(
+                            12,
+                          ), // Matches parent border radius
+                        ),
+                        child:
+                            restaurant.imageUrls.isNotEmpty
+                                ? SizedBox(
+                                  height: 120, // Reduced from 140
+                                  child: PageView.builder(
+                                    itemCount: restaurant.imageUrls.length,
+                                    itemBuilder: (context, index) {
+                                      return _buildRestaurantImageItem(
+                                        restaurant.imageUrls[index],
+                                      );
+                                    },
+                                  ),
+                                )
+                                : Container(
+                                  height: 120, // Reduced from 140
+                                  width: double.infinity,
+                                  color: Colors.grey[200],
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.restaurant_menu,
+                                        size: 36, // Reduced from 40
+                                        color: Colors.grey[400],
+                                      ),
+                                      const SizedBox(
+                                        height: 4,
+                                      ), // Reduced from 8
+                                      Text(
+                                        "No images available",
+                                        style: TextStyle(
+                                          color: Colors.grey[600],
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                      ),
+
+                      // Map location button
+                      Positioned(
+                        top: 8, // Reduced from 10
+                        right: 8, // Reduced from 10
+                        child: InkWell(
+                          onTap: () async {
+                            final latitude = restaurant.location.latitude;
+                            final longitude = restaurant.location.longitude;
+
+                            final url = Uri.parse(
+                              'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude',
+                            );
+
+                            if (await canLaunchUrl(url)) {
+                              await launchUrl(url);
+                            }
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(6), // Reduced from 8
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.2),
+                                  blurRadius: 3, // Reduced from 4
+                                  offset: const Offset(0, 1), // Reduced from 2
+                                ),
+                              ],
+                            ),
+                            child: Icon(
+                              Icons.directions,
+                              size: 18, // Reduced from 20
+                              color: secondaryColor,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  // Restaurant details content
+                  Padding(
+                    padding: const EdgeInsets.all(12), // Reduced from 16
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                restaurant.name,
+                                style: const TextStyle(
+                                  fontSize: 15, // Reduced from 16
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                overflow: TextOverflow.ellipsis,
                               ),
-                            )
-                            : Container(
-                              height: 140,
-                              width: double.infinity,
-                              color: Colors.grey[200],
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 6, // Reduced from 8
+                                vertical: 3, // Reduced from 4
+                              ),
+                              decoration: BoxDecoration(
+                                color: primaryColor.withOpacity(0.2),
+                                borderRadius: BorderRadius.circular(
+                                  10,
+                                ), // Reduced from 12
+                              ),
+                              child: Row(
                                 children: [
                                   Icon(
-                                    Icons.restaurant_menu,
-                                    size: 40,
-                                    color: Colors.grey[400],
-                                  ),
-                                  const SizedBox(height: 8),
+                                    Icons.star,
+                                    size: 14,
+                                    color: primaryColor,
+                                  ), // Reduced from 16
+                                  const SizedBox(width: 2), // Reduced from 4
                                   Text(
-                                    "No images available",
-                                    style: TextStyle(color: Colors.grey[600]),
+                                    '${restaurant.rating}',
+                                    style: TextStyle(
+                                      fontSize: 13, // Reduced from 14
+                                      fontWeight: FontWeight.bold,
+                                      color: primaryColor,
+                                    ),
                                   ),
                                 ],
                               ),
                             ),
-                  ),
-
-                  // Map location button
-                  Positioned(
-                    top: 10,
-                    right: 10,
-                    child: InkWell(
-                      onTap: () async {
-                        final latitude = restaurant.location.latitude;
-                        final longitude = restaurant.location.longitude;
-
-                        final url = Uri.parse(
-                          'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude',
-                        );
-
-                        if (await canLaunchUrl(url)) {
-                          await launchUrl(url);
-                        }
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
-                              blurRadius: 4,
-                              offset: const Offset(0, 2),
+                          ],
+                        ),
+                        const SizedBox(height: 4), // Reduced from 8
+                        Text(
+                          restaurant.cuisine,
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.grey[700],
+                          ), // Reduced from 14
+                        ),
+                        const SizedBox(height: 8), // Reduced from 12
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.location_on,
+                              size: 14, // Reduced from 16
+                              color: Colors.grey[600],
+                            ),
+                            const SizedBox(width: 3), // Reduced from 4
+                            Expanded(
+                              child: Text(
+                                restaurant.address,
+                                style: TextStyle(
+                                  fontSize: 13, // Reduced from 14
+                                  color: Colors.grey[600],
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            const SizedBox(width: 6), // Reduced from 8
+                            IconButton(
+                              icon: Icon(
+                                Icons.menu_book,
+                                color: secondaryColor,
+                                size: 18,
+                              ),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (context) => MenuDetailScreen(
+                                          restaurant: restaurant,
+                                        ),
+                                  ),
+                                );
+                              },
+                              padding: EdgeInsets.zero,
+                              constraints: const BoxConstraints(),
+                              iconSize: 18,
                             ),
                           ],
                         ),
-                        child: Icon(
-                          Icons.directions,
-                          size: 20,
-                          color: secondaryColor,
-                        ),
-                      ),
+                      ],
                     ),
                   ),
                 ],
               ),
+            ),
 
-              // Restaurant details content
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            restaurant.name,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: primaryColor.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(Icons.star, size: 16, color: primaryColor),
-                              const SizedBox(width: 4),
-                              Text(
-                                '${restaurant.rating}',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: primaryColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      restaurant.cuisine,
-                      style: TextStyle(fontSize: 14, color: Colors.grey[700]),
-                    ),
-                    const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.location_on,
-                          size: 16,
-                          color: Colors.grey[600],
-                        ),
-                        const SizedBox(width: 4),
-                        Expanded(
-                          child: Text(
-                            restaurant.address,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey[600],
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        IconButton(
-                          icon: Icon(Icons.menu_book, color: secondaryColor),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder:
-                                    (context) => MenuDetailScreen(
-                                      restaurant: restaurant,
-                                    ),
-                              ),
-                            );
-                          },
-                          padding: EdgeInsets.zero,
-                          constraints: const BoxConstraints(),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+            // Add visual separator between cards
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: Container(
+                height: 1,
+                color: Colors.grey[200],
+                margin: const EdgeInsets.symmetric(horizontal: 40),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
